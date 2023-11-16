@@ -10,7 +10,7 @@
       <v-card-text>
         <v-form ref="form" @submit.prevent="save">
           <v-row>
-            <v-col :cols="'12'">
+            <v-col :cols="'6'">
               <v-text-field
                 :rules="groupRules.required"
                 :placeholder="'Nome'"
@@ -20,6 +20,19 @@
                 v-model="group.name"
               >
               </v-text-field>
+            </v-col>
+            <v-col cols="6">
+              <v-select
+                item-title="name"
+                item-value="id"
+                return-object
+                :rules="groupRules.required"
+                v-model="group.realm_id"
+                :label="'Id reino'"
+                :items="realms"
+                variant="underlined"
+              >
+              </v-select>
             </v-col>
           </v-row>
           <v-card-actions>
@@ -40,8 +53,8 @@
 import ModalBase from "@/components/modal/ModalBase.vue";
 import groupComp from "@/compositionAPI/groupComp";
 
-const { group, sendPayload, appStore } = groupComp();
-import { ref, onMounted } from "vue";
+const { group, sendPayload, appStore, realms, fetchRealms } = groupComp();
+import { ref, onMounted, watch } from "vue";
 const form = ref(null);
 
 const props = defineProps({
@@ -49,11 +62,18 @@ const props = defineProps({
   object: Object,
 });
 
+watch(realms, (newValue, oldValue) => {
+  if (newValue.length > 0 && props.object) {
+    group.value.realm_id = newValue.filter((i) => i.id == group.value.realm_id)[0];
+  }
+});
+
 const groupRules = {
   required: [(v) => !!v || "Campo obrigatorio"],
 };
 
 onMounted(() => {
+  fetchRealms();
   if (props.object) {
     group.value = { ...props.object };
   }

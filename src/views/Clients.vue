@@ -33,7 +33,8 @@ import clientComp from "@/compositionAPI/clientComp";
 import { ref } from "vue";
 import baseComp from "@/compositionAPI/baseComp";
 
-const { object, dialog, handleManage, callEdit, callDeleteBase, closeDialog } = baseComp();
+const { object, dialog, handleManage, callEdit, callDeleteBase, closeDialog } =
+  baseComp();
 
 const clientService = new ClientService();
 const index = ref(0);
@@ -74,8 +75,8 @@ const modalInfo = {
   ],
 };
 
-function callDelete(e){
-  clients.value = callDeleteBase(e, clientService, clients.value)
+function callDelete(e) {
+  clients.value = callDeleteBase(e, clientService, clients.value);
 }
 function fetchClients(page = 1, c = 10) {
   const realm = "AuthSure";

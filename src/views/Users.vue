@@ -20,7 +20,7 @@
     v-if="dialog"
     :dialog="dialog"
     :object="object"
-    @close="closeDialog"
+    @close="closeDialog($event, fetchUsers)"
   ></ManageUser>
 </template>
 
@@ -31,7 +31,7 @@ import UserService from "@/service/userService.js";
 import { ref, watch } from "vue";
 import baseComp from "@/compositionAPI/baseComp";
 
-const { object, dialog, attTable, handleManage, callEdit } = baseComp();
+const { object, dialog, attTable, handleManage, callEdit, callDeleteBase, closeDialog } = baseComp();
 
 const userService = new UserService();
 const index = ref(0);
@@ -41,22 +41,8 @@ const users = ref([]);
 
 
 
-function closeDialog(e) {
-  dialog.value = false;
-  object.value = null;
-  fetchUsers();
-}
-
 function callDelete(e) {
-  console.log(e);
-  try {
-    if (e) {
-      userService.delete(e);
-      users.value = users.value.filter((i) => i.id !== e);
-    }
-  } catch (error) {
-    console.error(error);
-  }
+  users.value = callDeleteBase(e, userService, users.value)  
 }
 
 const modalEdit = {

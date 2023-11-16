@@ -23,7 +23,7 @@
     v-if="dialog"
     :dialog="dialog"
     :object="object"
-    @close="closeDialog"
+    @close="closeDialog($event, fetchRealms)"
   ></ManageRealm>
 </template>
 
@@ -33,7 +33,7 @@ import RealmService from "@/service/realmService.js";
 import ManageRealm from "@/components/modal/manage/ManageRealm.vue";
 import baseComp from "@/compositionAPI/baseComp";
 
-const { object, dialog, attTable, handleManage, callEdit } = baseComp();
+const { object, dialog, attTable, handleManage, callEdit, callDeleteBase, closeDialog } = baseComp();
 import { ref } from "vue";
 
 const realmService = new RealmService();
@@ -66,23 +66,9 @@ function fetchRealms(page = 1, c = 10) {
   });
 }
 
-function closeDialog(e) {
-  dialog.value = false;
-  object.value = null;
-  fetchRealms();
-}
 
 function callDelete(e) {
-  console.log(e);
-  try {
-    if (e) {
-      realmService.delete(e);
-
-      realms.value = realms.value.filter((i) => i.id !== e);
-    }
-  } catch (error) {
-    console.error(error);
-  }
+  realms.value = callDeleteBase(e, realmService, realms.value);
 }
 
 fetchRealms();
