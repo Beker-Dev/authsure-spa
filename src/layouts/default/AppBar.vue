@@ -38,7 +38,7 @@
       <v-list-subheader class="text-subtitle-1 mt-4">Manage</v-list-subheader>
       <v-divider class="mt-3"></v-divider>
       <v-list-item
-        v-for="(item, i) in items"
+        v-for="(item, i) in appStore.choosenRealm ? items : items.slice(0, 1)"
         :key="i"
         :value="item"
         :to="item.link"
@@ -60,10 +60,12 @@
 import { ref } from "vue";
 import { useDisplay } from "vuetify/lib/framework.mjs";
 import { authUserStore } from "@/store/authStore/authStore";
+import { useAppStore } from "@/store/app";
 import { useRouter } from "vue-router";
 const authApp = authUserStore();
 const { smAndDown } = useDisplay();
 const userouter = useRouter();
+const appStore = useAppStore();
 const expandNavBar = ref(true);
 const items = ref([
   {
