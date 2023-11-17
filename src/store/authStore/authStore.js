@@ -33,6 +33,7 @@ export const authUserStore = defineStore("auth", {
       try {
         await AuthService.logOut(this.user);
         this.user = null;
+        localStorage.removeItem("auth")
       } catch (error) {
         console.error(error);
       }

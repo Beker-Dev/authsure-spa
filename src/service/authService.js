@@ -18,7 +18,7 @@ class AuthService extends Service {
   }
 
   async logOut(payload) {
-    const requestUrl = this.resource + "logOut";
+    const requestUrl = this.resource + "logout";
     return await this._http.post(requestUrl, payload);
   }
 }
