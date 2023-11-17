@@ -11,6 +11,7 @@
       :modalInfo="modalInfo"
       :page="currentPage"
       :lastPage="lastPage"
+      :isRealmPage="true"
       @openManage="handleManage"
       :key="index"
       @edit="callEdit"

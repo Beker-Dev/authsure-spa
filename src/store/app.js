@@ -1,7 +1,7 @@
 // Utilities
 import { defineStore } from "pinia";
 const chRealm = localStorage.getItem("choosenRealm");
-let choosenRealm = chRealm ? JSON.parse(chRealm) : null;
+let choosenRealm = chRealm ? chRealm : null;
 export const useAppStore = defineStore("app", {
   id: "normalApp",
 
@@ -21,10 +21,13 @@ export const useAppStore = defineStore("app", {
     setChoosenRealm(payload){
       try {
         choosenRealm = payload
-        localStorage.setItem(choosenRealm, choosenRealm)
+        localStorage.setItem("choosenRealm", choosenRealm)
       } catch (error) {
         console.error(error)
       }
     }
   },
+  getters: {
+    getChoosenRealm : (state) => state.choosenRealm
+  }
 });

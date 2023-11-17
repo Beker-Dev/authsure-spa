@@ -38,7 +38,9 @@
       <v-list-subheader class="text-subtitle-1 mt-4">Manage</v-list-subheader>
       <v-divider class="mt-3"></v-divider>
       <v-list-item
-        v-for="(item, i) in appStore.choosenRealm ? items : items.slice(0, 1)"
+        v-for="(item, i) in appStore.getChoosenRealm
+          ? items
+          : items.slice(0, 1)"
         :key="i"
         :value="item"
         :to="item.link"
