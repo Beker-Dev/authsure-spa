@@ -64,7 +64,7 @@ router.beforeEach((to, from, next) => {
         const appStore = useAppStore();
         appStore.changeDialog({
           color: "red",
-          message: "Please choose a realm",
+          message: "Selecione um reino para ter acesso a isso.",
           show: true,
         });
         next({ path: "/realms" });
@@ -74,7 +74,7 @@ router.beforeEach((to, from, next) => {
     }
   } else {
     console.log('foi pro login', from)
-    if(to.name == "login" && from.path == "/")
+    if(to.name == "login")
       next()
     next({ name: "login" })
   }

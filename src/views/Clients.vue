@@ -29,12 +29,17 @@
 import ViewBase from "@/components/ViewBase.vue";
 import ManageClient from "@/components/modal/manage/ManageClient.vue";
 import ClientService from "@/service/clientService.js";
-import clientComp from "@/compositionAPI/clientComp";
-import { ref } from "vue";
+import { ref, onMounted } from "vue";
 import baseComp from "@/compositionAPI/baseComp";
 
-const { object, dialog, handleManage, callEdit, callDeleteBase, closeDialog } =
-  baseComp();
+const {
+  object,
+  dialog,
+  handleManage,
+  callEdit,
+  callDeleteBase,
+  closeDialog,
+} = baseComp();
 
 const clientService = new ClientService();
 const index = ref(0);
@@ -79,7 +84,7 @@ function callDelete(e) {
   clients.value = callDeleteBase(e, clientService, clients.value);
 }
 function fetchClients(page = 1, c = 10) {
-  const realm = "AuthSure";
+  const realm = localStorage.getItem("choosenRealm");
   const query = { page, c, realm };
   clientService.clients(query).then((data) => {
     clients.value = data.clients;
@@ -89,5 +94,7 @@ function fetchClients(page = 1, c = 10) {
   });
 }
 
-fetchClients();
+onMounted(() => {
+  fetchClients();
+});
 </script>

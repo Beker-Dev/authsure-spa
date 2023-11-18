@@ -69,7 +69,7 @@ const modalInfo = {
 };
 
 function fetchRoles(page = 1, c = 10) {
-  const realm = "AuthSure";
+  const realm = localStorage.getItem("choosenRealm");
   const query = { page, c, realm };
   roleservice.roles(query).then((data) => {
     roles.value = data.roles;

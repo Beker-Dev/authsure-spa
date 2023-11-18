@@ -38,9 +38,7 @@
       <v-list-subheader class="text-subtitle-1 mt-4">Manage</v-list-subheader>
       <v-divider class="mt-3"></v-divider>
       <v-list-item
-        v-for="(item, i) in appStore.getChoosenRealm
-          ? items
-          : items.slice(0, 1)"
+        v-for="(item, i) in definedRealm ? items : items.slice(0, 1)"
         :key="i"
         :value="item"
         :to="item.link"
@@ -59,7 +57,7 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { ref, computed } from "vue";
 import { useDisplay } from "vuetify/lib/framework.mjs";
 import { authUserStore } from "@/store/authStore/authStore";
 import { useAppStore } from "@/store/app";
@@ -68,6 +66,9 @@ const authApp = authUserStore();
 const { smAndDown } = useDisplay();
 const userouter = useRouter();
 const appStore = useAppStore();
+const definedRealm = computed(() => {
+  return appStore.getChoosenRealm;
+});
 const expandNavBar = ref(true);
 const items = ref([
   {
@@ -101,11 +102,11 @@ const items = ref([
     icon: "mdi-sitemap-outline",
     link: "/sessions",
   },
-  {
-    text: "Events",
-    icon: "mdi-post-outline",
-    link: "/events",
-  },
+  // {
+  //   text: "Events",
+  //   icon: "mdi-post-outline",
+  //   link: "/events",
+  // },
 ]);
 
 async function logOutUser() {

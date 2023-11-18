@@ -71,7 +71,7 @@ function callDelete(e) {
 }
 
 function fetchSessions(page = 1, c = 10) {
-  const realm = "AuthSure";
+  const realm = localStorage.getItem("choosenRealm");
   const query = { page, c, realm };
   sessionService.sessions(query).then((data) => {
     sessions.value = data.sessions;

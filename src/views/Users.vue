@@ -67,7 +67,7 @@ const modalInfo = {
 };
 
 function fetchUsers(page = 1, c = 10) {
-  const realm = "AuthSure";
+  const realm = localStorage.getItem("choosenRealm");
   const query = {page, c, realm}
   userService.users(query).then((data) => {
     users.value = data.users;

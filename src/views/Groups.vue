@@ -68,7 +68,7 @@ const modalInfo = {
 };
 
 function fetchGroups(page = 1, c = 10) {
-  const realm = "AuthSure";
+  const realm = localStorage.getItem("choosenRealm");
   const query = { page, c, realm };
   groupService.groups(query).then((data) => {
     groups.value = data.groups;

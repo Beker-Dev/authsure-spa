@@ -28,7 +28,7 @@ export default function groupComp() {
   }
   function fetchRealms(page = 1, c = 40) {
     realmService.realms(page, c).then((data) => {
-      realms.value = data.realms;
+      realms.value = data.realms.filter((realm) => realm.name == localStorage.getItem("choosenRealm"));
       currentPg.value = page;
       lastPg.value = data.last_page;
     });

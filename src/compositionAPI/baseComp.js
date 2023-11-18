@@ -5,6 +5,7 @@ export default function baseComp() {
   const appStore = useAppStore();
   const dialog = ref(false);
   const attTable = ref(null);
+  const baseRealm = appStore.getChoosenRealm
 
   function callEdit(e) {
     object.value = e;
@@ -47,6 +48,7 @@ export default function baseComp() {
     object,
     dialog,
     attTable,
+    baseRealm,
     callDeleteBase,
     callEdit,
     handleManage,

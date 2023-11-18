@@ -188,15 +188,15 @@ export default {
     },
     ModalEdit: {
       type: Object,
-      required: true,
+      required: false,
     },
     modalDelete: {
       type: Object,
-      required: true,
+      required: false,
     },
     modalInfo: {
       type: Object,
-      required: true,
+      required: false,
     },
     page: {
       type: Number,

@@ -20,8 +20,8 @@ export const useAppStore = defineStore("app", {
     },
     setChoosenRealm(payload){
       try {
-        choosenRealm = payload
-        localStorage.setItem("choosenRealm", choosenRealm)
+        this.choosenRealm = payload
+        localStorage.setItem("choosenRealm", this.choosenRealm)
       } catch (error) {
         console.error(error)
       }
