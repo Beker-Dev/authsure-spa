@@ -36,6 +36,9 @@
                         required
                       ></v-text-field>
                     </v-col>
+                    <v-col cols="12" class="d-flex justify-end">
+                      <v-btn color="transparent" density="compact" elevation="0">Forgot Password</v-btn>
+                    </v-col>
                     <v-col cols="12">
                       <v-btn type="submit" block color="blue"> Log in </v-btn>
                     </v-col>
