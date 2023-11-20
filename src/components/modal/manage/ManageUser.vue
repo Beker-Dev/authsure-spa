@@ -21,9 +21,8 @@
               >
               </v-text-field>
             </v-col>
-            <v-col :cols="'6'"    v-if="!props.object">
+            <v-col :cols="'6'" v-if="!props.object">
               <v-text-field
-             
                 :rules="userRules.password"
                 :placeholder="'Senha'"
                 :label="'Senha'"
@@ -106,6 +105,7 @@
 </template>
 
 <script setup>
+const emit = defineEmits("close");
 import ModalBase from "@/components/modal/ModalBase.vue";
 import userComp from "@/compositionAPI/userComp";
 
@@ -160,8 +160,6 @@ onMounted(() => {
     user.value = { ...props.object };
   }
 });
-
-const emit = defineEmits("close");
 
 function closeDialog(e) {
   emit("close");
