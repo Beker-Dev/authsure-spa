@@ -19,7 +19,6 @@
       @paginate="fetchRealms"
     />
   </div>
-
   <ManageRealm
     v-if="dialog"
     :dialog="dialog"
@@ -34,7 +33,15 @@ import RealmService from "@/service/realmService.js";
 import ManageRealm from "@/components/modal/manage/ManageRealm.vue";
 import baseComp from "@/compositionAPI/baseComp";
 
-const { object, dialog, attTable, handleManage, callEdit, callDeleteBase, closeDialog } = baseComp();
+const {
+  object,
+  dialog,
+  attTable,
+  handleManage,
+  callEdit,
+  callDeleteBase,
+  closeDialog,
+} = baseComp();
 import { ref } from "vue";
 
 const realmService = new RealmService();
@@ -58,7 +65,7 @@ const modalInfo = {
 };
 
 function fetchRealms(page = 1, c = 10) {
-  const query = {page, c}
+  const query = { page, c };
   realmService.realms(query).then((data) => {
     realms.value = data.realms;
     currentPage.value = page;
@@ -66,7 +73,6 @@ function fetchRealms(page = 1, c = 10) {
     index.value++;
   });
 }
-
 
 function callDelete(e) {
   realms.value = callDeleteBase(e, realmService, realms.value);

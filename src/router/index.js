@@ -67,7 +67,7 @@ router.beforeEach((to, from, next) => {
           message: "Selecione um reino para ter acesso a isso.",
           show: true,
         });
-        next({ path: "/realms" });
+        next({ name: "realms" });
       } else {
         next();
       }

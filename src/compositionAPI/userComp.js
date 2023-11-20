@@ -4,14 +4,17 @@ import { useAppStore } from "@/store/app";
 import { useRouter } from "vue-router";
 import UserService from "@/service/userService";
 import RealmService from "@/service/realmService.js";
+import RoleService from "@/service/roleService.js";
 import { authUserStore } from "@/store/authStore/authStore";
 export default function userComp() {
   const userouter = useRouter();
+  const roleservice = new RoleService();
   const userService = new UserService();
   const realmService = new RealmService();
   const authApp = authUserStore();
   const appStore = useAppStore();
   const realms = ref([]);
+  const roles = ref([]);
   const currentPg = ref(1);
   const lastPg = ref(0);
   const userRules = {
@@ -39,6 +42,7 @@ export default function userComp() {
 
   function sendPayload(update = false) {
     try {
+     
       user.value.realm_id = user.value.realm_id ? user.value.realm_id.id : null;
       if (update) userService.update(user.value, user.value.id);
       else userService.insert(user.value);
@@ -54,10 +58,23 @@ export default function userComp() {
       lastPg.value = data.last_page;
     });
   }
+  function fetchRoles(page = 1, c = 40) {
+    const realm = localStorage.getItem("choosenRealm");
+    const query = { page, c, realm };
+    roleservice.roles(query).then((data) => {
+      roles.value = data.roles;
+      currentPg.value = page;
+      lastPg.value = data.last_page;
+    
+    });
+  }
+  
   return {
     userRules,
     sendPayload,
     fetchRealms,
+    fetchRoles,
+    roles,
     user,
     realms,
     appStore,

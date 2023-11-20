@@ -55,8 +55,22 @@
                 return-object
                 :rules="userRules.required"
                 v-model="user.realm_id"
-                :label="'Id reino'"
+                :label="'Reino'"
                 :items="realms"
+                variant="underlined"
+              >
+              </v-select>
+            </v-col>
+            <v-col cols="6">
+              <v-select
+                item-title="name"
+                item-value="id"
+                return-object
+                :rules="userRules.required"
+                v-model="user.roles"
+                :label="'Cargos'"
+                multiple
+                :items="roles"
                 variant="underlined"
               >
               </v-select>
@@ -80,7 +94,8 @@
 import ModalBase from "@/components/modal/ModalBase.vue";
 import userComp from "@/compositionAPI/userComp";
 
-const { user, sendPayload, appStore, realms, fetchRealms } = userComp();
+const { user, sendPayload, appStore, realms, fetchRealms, fetchRoles, roles } =
+  userComp();
 import { ref, onMounted, watch } from "vue";
 const form = ref(null);
 
@@ -115,6 +130,7 @@ const userRules = {
 
 onMounted(() => {
   fetchRealms();
+  fetchRoles();
   if (props.object) {
     user.value = { ...props.object };
   }
@@ -129,6 +145,10 @@ async function save() {
   try {
     const validated = await form.value.validate();
     if (validated.valid) {
+      const roles = user.value.roles.map((role) => {
+        return role.id
+      })
+      user.value.roles = roles
       sendPayload(props.object ? true : false);
       closeDialog();
       const action = props.object ? "alterado" : "registrado";
