@@ -112,7 +112,7 @@ const { user, sendPayload, appStore, realms, fetchRealms, fetchRoles, roles, gro
   userComp();
 import { ref, onMounted, watch } from "vue";
 const form = ref(null);
-
+const activeGroups = ref([])
 const props = defineProps({
   dialog: Boolean,
   object: Object,
@@ -126,6 +126,7 @@ watch(realms, (nw, old) => {
       );
   }
 });
+
 
 const userRules = {
   required: [(v) => !!v || "Campo obrigatorio"],

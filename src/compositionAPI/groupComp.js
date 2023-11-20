@@ -2,14 +2,16 @@ import { ref } from "vue";
 import GroupService from "@/service/groupService.js";
 import { useAppStore } from "@/store/app";
 import RealmService from "@/service/realmService.js";
+import RoleService from "@/service/roleService.js";
 export default function groupComp() {
   const groupService = new GroupService();
   const realmService = new RealmService();
   const appStore = useAppStore();
   const currentPg = ref(1);
   const lastPg = ref(0);
-
+  const roleservice = new RoleService();
   const realms = ref([]);
+  const roles = ref([]);
   const group = ref({
     id: null,
     name: "",
@@ -33,11 +35,23 @@ export default function groupComp() {
       lastPg.value = data.last_page;
     });
   }
+  function fetchRoles(page = 1, c = 40) {
+    const realm = localStorage.getItem("choosenRealm");
+    const query = { page, c, realm };
+    roleservice.roles(query).then((data) => {
+      roles.value = data.roles;
+      currentPg.value = page;
+      lastPg.value = data.last_page;
+    
+    });
+  }
 
   return {
     appStore,
     group,
     realms,
+    roles,
+    fetchRoles,
     fetchRealms,
     sendPayload,
   };
