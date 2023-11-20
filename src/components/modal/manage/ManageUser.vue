@@ -21,8 +21,9 @@
               >
               </v-text-field>
             </v-col>
-            <v-col :cols="'6'">
+            <v-col :cols="'6'"    v-if="!props.object">
               <v-text-field
+             
                 :rules="userRules.password"
                 :placeholder="'Senha'"
                 :label="'Senha'"
@@ -108,11 +109,20 @@
 import ModalBase from "@/components/modal/ModalBase.vue";
 import userComp from "@/compositionAPI/userComp";
 
-const { user, sendPayload, appStore, realms, fetchRealms, fetchRoles, roles, groups, fetchGroups } =
-  userComp();
+const {
+  user,
+  sendPayload,
+  appStore,
+  realms,
+  fetchRealms,
+  fetchRoles,
+  roles,
+  groups,
+  fetchGroups,
+} = userComp();
 import { ref, onMounted, watch } from "vue";
 const form = ref(null);
-const activeGroups = ref([])
+const activeGroups = ref([]);
 const props = defineProps({
   dialog: Boolean,
   object: Object,
@@ -126,7 +136,6 @@ watch(realms, (nw, old) => {
       );
   }
 });
-
 
 const userRules = {
   required: [(v) => !!v || "Campo obrigatorio"],
@@ -162,13 +171,13 @@ async function save() {
     const validated = await form.value.validate();
     if (validated.valid) {
       const roles = user.value.roles.map((role) => {
-        return role.id
-      })
-      const groups = user.value.groups.map((group) =>{
-        return group.id
-      } )
-      user.value.roles = roles
-      user.value.groups = groups
+        return role.id;
+      });
+      const groups = user.value.groups.map((group) => {
+        return group.id;
+      });
+      user.value.roles = roles;
+      user.value.groups = groups;
       sendPayload(props.object ? true : false);
       closeDialog();
       const action = props.object ? "alterado" : "registrado";
