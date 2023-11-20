@@ -75,6 +75,20 @@
               >
               </v-select>
             </v-col>
+            <v-col cols="6">
+              <v-select
+                item-title="name"
+                item-value="id"
+                return-object
+                :rules="userRules.required"
+                v-model="user.groups"
+                :label="'Grupos'"
+                multiple
+                :items="groups"
+                variant="underlined"
+              >
+              </v-select>
+            </v-col>
           </v-row>
           <v-card-actions>
             <v-row>
@@ -94,7 +108,7 @@
 import ModalBase from "@/components/modal/ModalBase.vue";
 import userComp from "@/compositionAPI/userComp";
 
-const { user, sendPayload, appStore, realms, fetchRealms, fetchRoles, roles } =
+const { user, sendPayload, appStore, realms, fetchRealms, fetchRoles, roles, groups, fetchGroups } =
   userComp();
 import { ref, onMounted, watch } from "vue";
 const form = ref(null);
@@ -130,6 +144,7 @@ const userRules = {
 
 onMounted(() => {
   fetchRealms();
+  fetchGroups();
   fetchRoles();
   if (props.object) {
     user.value = { ...props.object };
@@ -148,7 +163,11 @@ async function save() {
       const roles = user.value.roles.map((role) => {
         return role.id
       })
+      const groups = user.value.groups.map((group) =>{
+        return group.id
+      } )
       user.value.roles = roles
+      user.value.groups = groups
       sendPayload(props.object ? true : false);
       closeDialog();
       const action = props.object ? "alterado" : "registrado";

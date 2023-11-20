@@ -1,6 +1,7 @@
 import router from "@/router";
 import { ref } from "vue";
 import { useAppStore } from "@/store/app";
+import GroupService from "@/service/groupService.js";
 import { useRouter } from "vue-router";
 import UserService from "@/service/userService";
 import RealmService from "@/service/realmService.js";
@@ -8,6 +9,8 @@ import RoleService from "@/service/roleService.js";
 import { authUserStore } from "@/store/authStore/authStore";
 export default function userComp() {
   const userouter = useRouter();
+  
+  const groupService = new GroupService();
   const roleservice = new RoleService();
   const userService = new UserService();
   const realmService = new RealmService();
@@ -15,6 +18,7 @@ export default function userComp() {
   const appStore = useAppStore();
   const realms = ref([]);
   const roles = ref([]);
+  const groups = ref([]);
   const currentPg = ref(1);
   const lastPg = ref(0);
   const userRules = {
@@ -68,12 +72,25 @@ export default function userComp() {
     
     });
   }
+  function fetchGroups(page = 1, c = 40) {
+    const realm = localStorage.getItem("choosenRealm");
+    const query = { page, c, realm };
+    groupService.groups(query).then((data) => {
+      groups.value = data.groups;
+      currentPg.value = page;
+      lastPg.value = data.last_page;
+     
+    });
+   
+  }
   
   return {
     userRules,
     sendPayload,
     fetchRealms,
     fetchRoles,
+    fetchGroups,
+    groups,
     roles,
     user,
     realms,
