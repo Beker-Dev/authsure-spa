@@ -11,6 +11,13 @@ class UserService extends Service {
     const requestUrl = this.createRequestUrl(query, this.resource);
     return await this.getAPI(requestUrl);
   }
+  async changePassword(payload, id) {
+    const requestUrl = `${this.resource}/${id} `;
+    return await this._http.patch(requestUrl, payload);
+  }
+  async recoverUser(payload){
+    return await this._http.post(`auth/recover-password`, payload);
+  }
 }
 
 export default UserService;

@@ -12,6 +12,11 @@ const routes = [
         component: () => import("@/views/Home.vue"),
       },
       {
+        path: "/audits",
+        name: "audits",
+        component: () => import("@/views/Audit.vue"),
+      },
+      {
         path: "/clients",
         name: "clients",
         component: () => import("@/views/Clients.vue"),
@@ -59,7 +64,7 @@ router.beforeEach((to, from, next) => {
     const parse = JSON.parse(localStorage.getItem("auth"));
     if (parse) {
       const hasChoosenRealm = localStorage.getItem("choosenRealm");
-      
+
       if (!hasChoosenRealm && to.name != "realms") {
         const appStore = useAppStore();
         appStore.changeDialog({
@@ -73,10 +78,9 @@ router.beforeEach((to, from, next) => {
       }
     }
   } else {
-    console.log('foi pro login', from)
-    if(to.name == "login")
-      next()
-    next({ name: "login" })
+    console.log("foi pro login", from);
+    if (to.name == "login") next();
+    next({ name: "login" });
   }
 });
 

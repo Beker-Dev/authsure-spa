@@ -102,6 +102,11 @@ const items = ref([
     icon: "mdi-sitemap-outline",
     link: "/sessions",
   },
+  {
+    text: "Auditoria",
+    icon: "mdi-eye-circle-outline",
+    link: "/audits",
+  },
   // {
   //   text: "Events",
   //   icon: "mdi-post-outline",

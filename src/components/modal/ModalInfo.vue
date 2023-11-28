@@ -1,5 +1,5 @@
 <template>
-  <ModalBase :isOpen="dialog" :title="info.title">
+  <ModalBase :isOpen="dialog" :title="info.title" :persistent="true">
     <slot v-if="object">
       <v-row>
         <v-col
@@ -11,7 +11,7 @@
           <div
             class="d-flex justify-center"
             :class="
-              info.labels[index] == 'Descrição'
+              info.labels[index] == 'Descrição' || info.labels[index] == 'Token'
                 ? 'flex-column'
                 : 'flex-row align-center'
             "
@@ -73,7 +73,10 @@ export default {
 
     convertData(key) {
       key = new Date(key);
-      return key.toLocaleString("pt-BR").replace(/\//g, "/").replace(", ", " - ");
+      return key
+        .toLocaleString("pt-BR")
+        .replace(/\//g, "/")
+        .replace(", ", " - ");
     },
   },
   watch: {

@@ -25,8 +25,12 @@
               <v-text-field
                 :rules="userRules.password"
                 :placeholder="'Senha'"
+                :append-icon="'mdi-lock-reset'"
+                @click:append="randomPass"
+                :append-inner-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
+                @click:appendInner="hideAndShowPassword"
                 :label="'Senha'"
-                :type="'password'"
+                :type="showPassword ? 'text' : 'password'"
                 required
                 variant="underlined"
                 counter
@@ -66,7 +70,6 @@
                 item-title="name"
                 item-value="id"
                 return-object
-                :rules="userRules.required"
                 v-model="user.roles"
                 :label="'Cargos'"
                 multiple
@@ -80,7 +83,6 @@
                 item-title="name"
                 item-value="id"
                 return-object
-                :rules="userRules.required"
                 v-model="user.groups"
                 :label="'Grupos'"
                 multiple
@@ -88,6 +90,11 @@
                 variant="underlined"
               >
               </v-select>
+            </v-col>
+            <v-col cols="12" v-if="props.object">
+              <span @click="openChangePassword"
+                ><a href="#">Trocar senha</a></span
+              >
             </v-col>
           </v-row>
           <v-card-actions>
@@ -101,6 +108,12 @@
         </v-form>
       </v-card-text>
     </v-card>
+    <ChangePassword
+      v-if="props.object"
+      :id="props.object.id"
+      @close="openChangePassword"
+      :dialog="openChangePass"
+    ></ChangePassword>
   </ModalBase>
 </template>
 
@@ -108,6 +121,7 @@
 const emit = defineEmits("close");
 import ModalBase from "@/components/modal/ModalBase.vue";
 import userComp from "@/compositionAPI/userComp";
+import ChangePassword from "@/components/modal/ChangePassword.vue";
 
 const {
   user,
@@ -122,11 +136,13 @@ const {
 } = userComp();
 import { ref, onMounted, watch } from "vue";
 const form = ref(null);
-const activeGroups = ref([]);
 const props = defineProps({
   dialog: Boolean,
   object: Object,
 });
+const openChangePass = ref(false);
+
+const showPassword = ref(false);
 
 watch(realms, (nw, old) => {
   if (nw && nw.length > 0) {
@@ -164,16 +180,38 @@ onMounted(() => {
 function closeDialog(e) {
   emit("close");
 }
+function hideAndShowPassword() {
+  showPassword.value = !showPassword.value;
+}
+function openChangePassword(e) {
+  openChangePass.value = !openChangePass.value;
+}
+function randomPass() {
+  const caracteres =
+    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+  let senha = "";
+  for (let i = 0; i < 8; i++) {
+    const randomIndex = Math.floor(Math.random() * caracteres.length);
+    senha += caracteres.charAt(randomIndex);
+  }
+  console.log(senha);
+  user.value.password = senha;
+}
 async function save() {
   try {
     const validated = await form.value.validate();
     if (validated.valid) {
-      const roles = user.value.roles.map((role) => {
-        return role.id;
-      });
-      const groups = user.value.groups.map((group) => {
-        return group.id;
-      });
+      const roles = user.value.roles
+        ? user.value.roles.map((role) => {
+            return role.id;
+          })
+        : [];
+      const groups = user.value.groups
+        ? user.value.groups.map((group) => {
+            return group.id;
+          })
+        : [];
+
       user.value.roles = roles;
       user.value.groups = groups;
       sendPayload(props.object ? true : false);

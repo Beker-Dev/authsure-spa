@@ -9,7 +9,7 @@
       </v-col>
     </v-row>
     <v-row>
-      <v-col cols="12" md="5" xl="5" class="d-flex flex-row">
+      <v-col cols="12" md="5" xl="5" class="d-flex flex-row" v-if="!onlyView">
         <v-btn
           size="x-large"
           variant="text"
@@ -73,6 +73,7 @@
                   icon
                   text
                   class="ml-1"
+                  v-if="!onlyView"
                   @click="handleModal('edit', object)"
                   ><v-icon>mdi-pencil</v-icon></v-btn
                 >
@@ -81,6 +82,7 @@
                   size="x-small"
                   icon
                   class="ml-1"
+                  v-if="!onlyView"
                   @click="handleModal('delete', object)"
                   ><v-icon>mdi-delete</v-icon></v-btn
                 >
@@ -207,6 +209,10 @@ export default {
       default: 1,
     },
     isRealmPage: {
+      type: Boolean,
+      default: false,
+    },
+    onlyView: {
       type: Boolean,
       default: false,
     },

@@ -7,6 +7,7 @@
     :keys="['id', 'is_active']"
     :modalEdit="modalEdit"
     :modalDelete="modalDelete"
+    :onlyView="true"
     :modalInfo="modalInfo"
     @openManage="handleManage"
     @edit="callEdit"
