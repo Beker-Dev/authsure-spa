@@ -1,4 +1,5 @@
 import axios from "axios";
+import { useAppStore } from "@/store/app";
 
 function verifyURL() {
   const hostname = window.location.hostname;
@@ -72,7 +73,12 @@ http.interceptors.response.use(
       }
     }
     if (errorStatus == 403) {
-      alert("Sem permissão para realizar essa ação.");
+      const appStore = useAppStore();
+      appStore.changeDialog({
+        color: "red",
+        message: `Sem permissão para realizar essa ação.`,
+        show: true,
+      });
     }
 
     return error;
