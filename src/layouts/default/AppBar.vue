@@ -72,33 +72,33 @@ const definedRealm = computed(() => {
 const expandNavBar = ref(true);
 const items = ref([
   {
-    text: "Realm",
+    text: "Reinos",
     icon: "mdi-account-hard-hat",
     link: "/realms",
   },
   {
-    text: "Clients",
+    text: "Clientes",
     icon: "mdi-application-brackets-outline",
     link: "/clients",
   },
 
   {
-    text: "Roles",
+    text: "Cargos",
     icon: "mdi-account-hard-hat",
     link: "/roles",
   },
   {
-    text: "Users",
+    text: "Usuários",
     icon: "mdi-account-cog",
     link: "/users",
   },
   {
-    text: "Groups",
+    text: "Grupos",
     icon: "mdi-account-group",
     link: "/groups",
   },
   {
-    text: "Sessions",
+    text: "Sessões",
     icon: "mdi-sitemap-outline",
     link: "/sessions",
   },
