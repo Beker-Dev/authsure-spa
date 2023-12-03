@@ -72,11 +72,11 @@ http.interceptors.response.use(
         return axios(originalRequest);
       }
     }
-    if (errorStatus == 403) {
+    if (errorStatus == 403 || errorStatus == 401) {
       const appStore = useAppStore();
       appStore.changeDialog({
         color: "red",
-        message: `Sem permissão para realizar essa ação.`,
+        message: `Não autorazido, error : ${errorDetail}`,
         show: true,
       });
     }

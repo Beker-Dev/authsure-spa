@@ -23,7 +23,7 @@ export const authUserStore = defineStore("auth", {
         localStorage.setItem("auth", JSON.stringify(this.user));
         return true;
       } catch (er) {
-        alert(`Erro no login: ${er}`);
+        console.error(er);
         return false;
       }
     },
