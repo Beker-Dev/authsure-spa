@@ -103,7 +103,7 @@ async function goLogin() {
   const auth = getAuth();
   if (auth) {
     const userouter = useRouter();
-    userouter.push({ name: "Home" });
+    userouter.push({ name: "realms" });
   }
 })();
 </script>

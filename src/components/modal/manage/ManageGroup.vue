@@ -29,6 +29,7 @@
                 :rules="groupRules.required"
                 v-model="group.realm_id"
                 :label="'Id reino'"
+                :disabled="true"
                 :items="realms"
                 variant="underlined"
               >

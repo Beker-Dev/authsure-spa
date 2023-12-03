@@ -36,6 +36,7 @@ export default function realComp() {
       realms.value = data.realms.filter(
         (realm) => realm.name == localStorage.getItem("choosenRealm")
       );
+      role.value.realm_id = realms.value[0];
       currentPg.value = page;
       lastPg.value = data.last_page;
     });

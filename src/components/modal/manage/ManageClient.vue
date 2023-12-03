@@ -78,6 +78,7 @@
                 v-model="client.realm_id"
                 :label="'Id reino'"
                 :items="realms"
+                :disabled="true"
                 variant="underlined"
               >
               </v-select>

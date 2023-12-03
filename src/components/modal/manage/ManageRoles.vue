@@ -29,6 +29,7 @@
                 :rules="rolesRules.required"
                 v-model="role.realm_id"
                 :label="'Id reino'"
+                :disabled="true"
                 :items="realms"
                 variant="underlined"
               >

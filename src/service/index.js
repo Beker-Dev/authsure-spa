@@ -142,7 +142,10 @@ http.interceptors.response.use(
 // }
 
 async function refresh(payload) {
-  return await http.post("/auth/refresh", payload);
+  return await http.post("/auth/refresh", payload).then((res) => {
+    localStorage.setItem("auth", JSON.stringify(res.data));
+    return res;
+  });
 }
 async function logOut(payload) {
   localStorage.removeItem("auth");

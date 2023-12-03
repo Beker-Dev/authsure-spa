@@ -20,7 +20,7 @@
     v-if="dialog"
     :dialog="dialog"
     :object="object"
-    @close="closeDialog($event, fetchUsers)"
+    @close="callClose($event)"
   ></ManageUser>
 </template>
 
@@ -51,6 +51,9 @@ function callDelete(e) {
   users.value = callDeleteBase(e, userService, users.value);
 }
 
+function callClose(e) {
+  closeDialog(e, fetchUsers);
+}
 const modalEdit = {
   title: "Editar Usuário",
 };

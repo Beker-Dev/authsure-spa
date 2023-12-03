@@ -57,6 +57,7 @@
                 item-title="name"
                 item-value="id"
                 return-object
+                :disabled="true"
                 :rules="userRules.required"
                 v-model="user.realm_id"
                 :label="'Reino'"
@@ -177,8 +178,8 @@ onMounted(() => {
   }
 });
 
-function closeDialog(e) {
-  emit("close");
+function closeDialog(e = null) {
+  emit("close", e);
 }
 function hideAndShowPassword() {
   showPassword.value = !showPassword.value;
@@ -214,8 +215,9 @@ async function save() {
 
       user.value.roles = roles;
       user.value.groups = groups;
-      sendPayload(props.object ? true : false);
-      closeDialog();
+      const data = sendPayload(props.object ? true : false);
+
+      closeDialog(data);
       const action = props.object ? "alterado" : "registrado";
       appStore.changeDialog({
         color: "green",

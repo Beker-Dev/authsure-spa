@@ -49,6 +49,7 @@ export default function groupComp() {
     const query = { page, c, realm };
     roleservice.roles(query).then((data) => {
       roles.value = data.roles;
+      group.value.realm_id = realms.value[0];
       currentPg.value = page;
       lastPg.value = data.last_page;
     });

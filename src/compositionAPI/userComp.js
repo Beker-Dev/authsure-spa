@@ -9,7 +9,7 @@ import RoleService from "@/service/roleService.js";
 import { authUserStore } from "@/store/authStore/authStore";
 export default function userComp() {
   const userouter = useRouter();
-  
+
   const groupService = new GroupService();
   const roleservice = new RoleService();
   const userService = new UserService();
@@ -46,10 +46,17 @@ export default function userComp() {
 
   function sendPayload(update = false) {
     try {
-     
+      let data = null;
       user.value.realm_id = user.value.realm_id ? user.value.realm_id.id : null;
-      if (update) userService.update(user.value, user.value.id);
-      else userService.insert(user.value);
+      if (update)
+        data = userService.update(user.value, user.value.id).then((res) => {
+          return res.data;
+        });
+      else
+        data = userService.insert(user.value).then((res) => {
+          return res.data;
+        });
+      return data;
     } catch (error) {
       console.error(error);
     }
@@ -57,10 +64,14 @@ export default function userComp() {
 
   function fetchRealms(page = 1, c = 40) {
     realmService.realms(page, c).then((data) => {
-      realms.value = data.realms.filter((realm) => realm.name == localStorage.getItem("choosenRealm"));
+      realms.value = data.realms.filter(
+        (realm) => realm.name == localStorage.getItem("choosenRealm")
+      );
+      user.value.realm_id = realms.value[0].id;
       currentPg.value = page;
       lastPg.value = data.last_page;
     });
+  
   }
   function fetchRoles(page = 1, c = 40) {
     const realm = localStorage.getItem("choosenRealm");
@@ -69,7 +80,6 @@ export default function userComp() {
       roles.value = data.roles;
       currentPg.value = page;
       lastPg.value = data.last_page;
-    
     });
   }
   function fetchGroups(page = 1, c = 40) {
@@ -79,11 +89,9 @@ export default function userComp() {
       groups.value = data.groups;
       currentPg.value = page;
       lastPg.value = data.last_page;
-     
     });
-   
   }
-  
+
   return {
     userRules,
     sendPayload,
