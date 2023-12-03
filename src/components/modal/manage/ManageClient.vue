@@ -82,6 +82,19 @@
               >
               </v-select>
             </v-col>
+            <v-col cols="6">
+              <v-select
+                item-title="name"
+                item-value="id"
+                return-object
+                v-model="client.roles"
+                :label="'Cargos'"
+                multiple
+                :items="roles"
+                variant="underlined"
+              >
+              </v-select>
+            </v-col>
           </v-row>
           <v-card-actions>
             <v-row>
@@ -102,8 +115,16 @@ import ModalBase from "@/components/modal/ModalBase.vue";
 import { ref, onMounted, watch } from "vue";
 import clientComp from "@/compositionAPI/clientComp";
 
-const { client, sendPayload, realms, fetchRealms, getClient, appStore } =
-  clientComp();
+const {
+  client,
+  sendPayload,
+  realms,
+  fetchRealms,
+  getClient,
+  appStore,
+  fetchRoles,
+  roles,
+} = clientComp();
 
 const form = ref(null);
 
@@ -131,6 +152,7 @@ const emit = defineEmits("close");
 onMounted(() => {
   try {
     fetchRealms();
+    fetchRoles();
     if (!props.object) {
     } else {
       getClient(props.object.id);
@@ -147,6 +169,12 @@ function closeDialog() {
 async function save() {
   const validated = await form.value.validate();
   try {
+    const roles = client.value.roles
+      ? client.value.roles.map((role) => {
+          return role.id;
+        })
+      : [];
+    client.value.roles = roles;
     if (validated.valid) {
       sendPayload(props.object ? props.object : false);
       closeDialog();

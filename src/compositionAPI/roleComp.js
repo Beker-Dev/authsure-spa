@@ -16,18 +16,26 @@ export default function realComp() {
 
   function sendPayload(update = false) {
     try {
-      role.value.realm_id = role.value.realm_id
-      ? role.value.realm_id.id
-      : null;
-      if (update) roleService.updateRole(role.value);
-      else roleService.insert(role.value);
+      role.value.realm_id = role.value.realm_id ? role.value.realm_id.id : null;
+      const payload = preparePayload(role.value);
+      console.log(JSON.stringify(payload));
+      if (update) roleService.updateRole(payload);
+      else roleService.insert(payload);
     } catch (error) {
       console.error(error);
     }
   }
+  function preparePayload(role) {
+    let payload = { ...role };
+    if (payload.realm) delete payload["realm"];
+    if (payload.clients) delete payload["clients"];
+    return payload;
+  }
   function fetchRealms(page = 1, c = 40) {
     realmService.realms(page, c).then((data) => {
-      realms.value = data.realms.filter((realm) => realm.name == localStorage.getItem("choosenRealm"));
+      realms.value = data.realms.filter(
+        (realm) => realm.name == localStorage.getItem("choosenRealm")
+      );
       currentPg.value = page;
       lastPg.value = data.last_page;
     });
@@ -38,6 +46,6 @@ export default function realComp() {
     role,
     realms,
     sendPayload,
-    fetchRealms
+    fetchRealms,
   };
 }

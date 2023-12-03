@@ -237,7 +237,6 @@ export default {
   },
   methods: {
     handleModal(type, object) {
-      console.log("aa");
       this.selectedObject = object;
 
       switch (type) {
@@ -262,7 +261,6 @@ export default {
 
     responseFromModal(event) {
       if (event) {
-        console.log(event);
         this.$emit("delete", this.idDelete);
       }
       this.idDelete = null;

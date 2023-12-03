@@ -1,12 +1,15 @@
 import { ref } from "vue";
 import RealmService from "@/service/realmService.js";
 import ClientService from "@/service/clientService";
+import RoleService from "@/service/roleService.js";
 import { useAppStore } from "@/store/app";
 export default function clientComp() {
   const realmService = new RealmService();
   const clientService = new ClientService();
+  const roleservice = new RoleService();
   const appStore = useAppStore();
   const realms = ref([]);
+  const roles = ref([]);
 
   const client = ref({
     id: null,
@@ -33,7 +36,18 @@ export default function clientComp() {
   }
   function fetchRealms(page = 1, c = 40) {
     realmService.realms(page, c).then((data) => {
-      realms.value = data.realms.filter((realm) => realm.name == localStorage.getItem("choosenRealm"));
+      realms.value = data.realms.filter(
+        (realm) => realm.name == localStorage.getItem("choosenRealm")
+      );
+      currentPg.value = page;
+      lastPg.value = data.last_page;
+    });
+  }
+  function fetchRoles(page = 1, c = 40) {
+    const realm = localStorage.getItem("choosenRealm");
+    const query = { page, c, realm };
+    roleservice.roles(query).then((data) => {
+      roles.value = data.roles;
       currentPg.value = page;
       lastPg.value = data.last_page;
     });
@@ -52,9 +66,11 @@ export default function clientComp() {
 
   return {
     client,
+    fetchRoles,
     sendPayload,
     fetchRealms,
     getClient,
+    roles,
     realmList,
     realms,
     currentPg,

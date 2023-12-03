@@ -64,8 +64,8 @@ function callDelete(e) {
 
 const modalInfo = {
   title: "Informações do Cargo",
-  labels: ["Id", "Nome", "Criado em", "Atualizado em"],
-  keys: ["id", "name", "created_at", "updated_at"],
+  labels: ["Id", "Nome", "Reino", "Acessos", "Criado em", "Atualizado em"],
+  keys: ["id", "name", "realm", "types", "created_at", "updated_at"],
 };
 
 function fetchRoles(page = 1, c = 10) {

@@ -46,6 +46,8 @@ const modalInfo = {
     "Id",
     "Url",
     "Método",
+    "Cliente",
+    "Usuário",
     "Status",
     "Sessão",
     "Criada em",
@@ -55,6 +57,8 @@ const modalInfo = {
     "id",
     "url",
     "method",
+    "client",
+    "user",
     "status",
     "session_id",
     "created_at",
@@ -66,7 +70,11 @@ function fetchAudits(page = 1, c = 10) {
   const realm = localStorage.getItem("choosenRealm");
   const query = { page, c, realm };
   auditService.audits(query).then((data) => {
-    audits.value = data.audits;
+    audits.value = data.audits.map((audit) => {
+      audit.client = audit.session.client;
+      audit.user = audit.session.user;
+      return audit;
+    });
     currentPage.value = page;
     lastPage.value = data.last_page;
     index.value++;

@@ -32,14 +32,8 @@ import ClientService from "@/service/clientService.js";
 import { ref, onMounted } from "vue";
 import baseComp from "@/compositionAPI/baseComp";
 
-const {
-  object,
-  dialog,
-  handleManage,
-  callEdit,
-  callDeleteBase,
-  closeDialog,
-} = baseComp();
+const { object, dialog, handleManage, callEdit, callDeleteBase, closeDialog } =
+  baseComp();
 
 const clientService = new ClientService();
 const index = ref(0);
@@ -64,6 +58,7 @@ const modalInfo = {
     "Chave",
     "Segredo",
     "Reino",
+    "Cargos",
     "Descrição",
     "Criado em",
     "Atualizado em",
@@ -73,7 +68,8 @@ const modalInfo = {
     "name",
     "key",
     "secret",
-    "realm_id",
+    "realm",
+    "roles",
     "description",
     "created_at",
     "updated_at",

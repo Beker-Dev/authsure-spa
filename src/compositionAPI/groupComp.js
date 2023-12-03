@@ -22,15 +22,24 @@ export default function groupComp() {
       group.value.realm_id = group.value.realm_id
         ? group.value.realm_id.id
         : null;
-      if (update) groupService.update(group.value, group.value.id);
-      else groupService.insert(group.value);
+      const payload = preparePayload(group.value);
+      if (update) groupService.update(payload, payload.id);
+      else groupService.insert(payload);
     } catch (error) {
       console.error(error);
     }
   }
+  function preparePayload(role) {
+    let payload = { ...role };
+    if (payload.realm) delete payload["realm"];
+    if (payload.users) delete payload["users"];
+    return payload;
+  }
   function fetchRealms(page = 1, c = 40) {
     realmService.realms(page, c).then((data) => {
-      realms.value = data.realms.filter((realm) => realm.name == localStorage.getItem("choosenRealm"));
+      realms.value = data.realms.filter(
+        (realm) => realm.name == localStorage.getItem("choosenRealm")
+      );
       currentPg.value = page;
       lastPg.value = data.last_page;
     });
@@ -42,7 +51,6 @@ export default function groupComp() {
       roles.value = data.roles;
       currentPg.value = page;
       lastPg.value = data.last_page;
-    
     });
   }
 

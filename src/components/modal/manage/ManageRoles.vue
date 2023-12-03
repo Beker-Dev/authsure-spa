@@ -34,6 +34,18 @@
               >
               </v-select>
             </v-col>
+            <v-col cols="6">
+              <v-select
+                
+                :rules="rolesRules.required"
+                v-model="role.types"
+                :label="'Acessos'"
+                multiple
+                :items="types"
+                variant="underlined"
+              >
+              </v-select>
+            </v-col>
           </v-row>
           <v-card-actions>
             <v-row>
@@ -56,7 +68,32 @@ import roleComp from "@/compositionAPI/roleComp";
 const { role, sendPayload, appStore, realms, fetchRealms } = roleComp();
 import { ref, onMounted, watch } from "vue";
 const form = ref(null);
-
+const types = ref([
+  "audit_view",
+  "client_view",
+  "client_create",
+  "client_update",
+  "client_delete",
+  "group_view",
+  "group_create",
+  "group_update",
+  "group_delete",
+  "realm_view",
+  "realm_create",
+  "realm_update",
+  "realm_delete",
+  "role_view",
+  "role_create",
+  "role_update",
+  "role_delete",
+  "session_view",
+  "user_view",
+  "user_create",
+  "user_update",
+  "user_delete",
+  "full_access",
+]);
+const choosenType = ref([]);
 const props = defineProps({
   dialog: Boolean,
   object: Object,

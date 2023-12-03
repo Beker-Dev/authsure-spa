@@ -15,8 +15,8 @@ class UserService extends Service {
     const requestUrl = `${this.resource}/${id} `;
     return await this._http.patch(requestUrl, payload);
   }
-  async recoverUser(payload){
-    return await this._http.post(`auth/recover-password`, payload);
+  async recoverUser(payload) {
+    return await this._http.post(`${this.resource}/recover-password`, payload);
   }
 }
 
