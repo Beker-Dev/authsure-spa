@@ -69,10 +69,11 @@ import userComp from "../compositionAPI/userComp";
 import { useRouter } from "vue-router";
 import getAuth from "@/utils/auth";
 import RecoverPassword from "@/components/modal/RecoverPassword.vue";
-
+import { useAppStore } from "@/store/app";
 onMounted(() => {
   console.log("mounted");
 });
+const appStore = useAppStore();
 
 const loginPayload = ref({
   username: "",
@@ -94,6 +95,7 @@ async function goLogin() {
       key: import.meta.env.VITE_CLIENT_KEY,
       secret: import.meta.env.VITE_CLIENT_SECRET,
     });
+  
   } catch (er) {
     throw er;
   }

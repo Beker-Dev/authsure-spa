@@ -36,6 +36,7 @@ import baseComp from "@/compositionAPI/baseComp";
 const {
   object,
   dialog,
+  appStore,
   attTable,
   handleManage,
   callEdit,
@@ -70,12 +71,17 @@ const modalInfo = {
 function fetchGroups(page = 1, c = 10) {
   const realm = localStorage.getItem("choosenRealm");
   const query = { page, c, realm };
-  groupService.groups(query).then((data) => {
-    groups.value = data.groups;
-    currentPage.value = page;
-    lastPage.value = data.last_page;
-    index.value++;
-  });
+  groupService
+    .groups(query)
+    .then((data) => {
+      groups.value = data.groups;
+      currentPage.value = page;
+      lastPage.value = data.last_page;
+      index.value++;
+    })
+    .catch((error) => {
+      console.error(error);
+    });
   attTable.value = 1;
 }
 

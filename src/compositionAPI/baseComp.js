@@ -49,6 +49,7 @@ export default function baseComp() {
     dialog,
     attTable,
     baseRealm,
+    appStore,
     callDeleteBase,
     callEdit,
     handleManage,

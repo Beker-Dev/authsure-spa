@@ -28,7 +28,7 @@
   >
     <v-list density="compact">
       <v-list>
-        <v-list-item title="admin">
+        <v-list-item :title="name">
           <template v-slot:prepend>
             <v-icon size="large" icon="mdi-account-circle-outline"></v-icon>
           </template>
@@ -57,17 +57,21 @@
 </template>
 
 <script setup>
-import { ref, computed } from "vue";
+import { ref, computed, onMounted } from "vue";
 import { useDisplay } from "vuetify/lib/framework.mjs";
 import { authUserStore } from "@/store/authStore/authStore";
 import { useAppStore } from "@/store/app";
 import { useRouter } from "vue-router";
 const authApp = authUserStore();
+const name = ref("");
 const { smAndDown } = useDisplay();
 const userouter = useRouter();
 const appStore = useAppStore();
 const definedRealm = computed(() => {
   return appStore.getChoosenRealm;
+});
+onMounted(() => {
+  name.value = JSON.parse(localStorage.getItem("auth")).name;
 });
 const expandNavBar = ref(true);
 const items = ref([

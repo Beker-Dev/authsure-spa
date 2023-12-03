@@ -37,7 +37,6 @@
             </v-col>
             <v-col cols="6">
               <v-select
-                
                 :rules="rolesRules.required"
                 v-model="role.types"
                 :label="'Acessos'"
@@ -112,7 +111,7 @@ const rolesRules = {
 };
 
 onMounted(() => {
-  fetchRealms();
+  fetchRealms(1, 40, props.object ? true : false);
   if (props.object) {
     role.value = { ...props.object };
   }

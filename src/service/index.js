@@ -71,6 +71,10 @@ http.interceptors.response.use(
         return axios(originalRequest);
       }
     }
+    if (errorStatus == 403) {
+      alert("Sem permissão para realizar essa ação.");
+    }
+
     return error;
   }
 );

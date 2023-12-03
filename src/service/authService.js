@@ -1,5 +1,5 @@
 import Service from "./serviceBase";
-
+import { useAppStore } from "@/store/app";
 class AuthService extends Service {
   constructor() {
     super();
@@ -8,8 +8,14 @@ class AuthService extends Service {
   }
 
   async login(payload) {
-    const requestUrl = this.resource + "login";
-    return await this._http.post(requestUrl, payload);
+    const appStore = useAppStore();
+    try {
+      const requestUrl = this.resource + "login";
+      return await this._http.post(requestUrl, payload);
+    } catch (error) {
+      alert(`Erro no login: ${error}`);
+      console.error(error);
+    }
   }
 
   async refresh(payload) {

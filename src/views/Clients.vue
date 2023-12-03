@@ -32,8 +32,15 @@ import ClientService from "@/service/clientService.js";
 import { ref, onMounted } from "vue";
 import baseComp from "@/compositionAPI/baseComp";
 
-const { object, dialog, handleManage, callEdit, callDeleteBase, closeDialog } =
-  baseComp();
+const {
+  object,
+  dialog,
+  appStore,
+  handleManage,
+  callEdit,
+  callDeleteBase,
+  closeDialog,
+} = baseComp();
 
 const clientService = new ClientService();
 const index = ref(0);
@@ -82,12 +89,17 @@ function callDelete(e) {
 function fetchClients(page = 1, c = 10) {
   const realm = localStorage.getItem("choosenRealm");
   const query = { page, c, realm };
-  clientService.clients(query).then((data) => {
-    clients.value = data.clients;
-    currentPage.value = page;
-    lastPage.value = data.last_page;
-    index.value++;
-  });
+  clientService
+    .clients(query)
+    .then((data) => {
+      clients.value = data.clients;
+      currentPage.value = page;
+      lastPage.value = data.last_page;
+      index.value++;
+    })
+    .catch((err) => {
+      console.error(err)
+    });
 }
 
 onMounted(() => {

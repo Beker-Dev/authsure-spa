@@ -41,7 +41,9 @@ export default function userComp() {
     try {
       const auth = await authApp.login(payload);
       if (auth) userouter.push({ name: "Home" });
-    } catch (error) {}
+    } catch (error) {
+      console.error(error);
+    }
   }
 
   function sendPayload(update = false) {
@@ -71,7 +73,6 @@ export default function userComp() {
       currentPg.value = page;
       lastPg.value = data.last_page;
     });
-  
   }
   function fetchRoles(page = 1, c = 40) {
     const realm = localStorage.getItem("choosenRealm");

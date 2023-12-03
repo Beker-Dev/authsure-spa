@@ -78,7 +78,6 @@ router.beforeEach((to, from, next) => {
       }
     }
   } else {
-    console.log("foi pro login", from);
     if (to.name == "login") next();
     next({ name: "login" });
   }
