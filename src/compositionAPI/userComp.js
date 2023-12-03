@@ -40,7 +40,7 @@ export default function userComp() {
   async function login(payload) {
     try {
       const auth = await authApp.login(payload);
-      if (auth) userouter.push({ name: "Home" });
+      if (auth) userouter.push({ name: "realms" });
     } catch (error) {
       console.error(error);
     }
