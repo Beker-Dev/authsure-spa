@@ -8,8 +8,8 @@
     :modalEdit="modalEdit"
     :modalDelete="modalDelete"
     :modalInfo="modalInfo"
-    @openManage="handleManage"
-    @delete="callDelete"
+    @openManage="handleManage($event)"
+    @delete="callDelete($event)"
     @edit="callEdit"
     :page="currentPage"
     :lastPage="lastPage"
@@ -20,7 +20,7 @@
     v-if="dialog"
     :dialog="dialog"
     :object="object"
-    @close="closeDialog"
+    @close="closeDialog($event, fetchClients)"
   >
   </ManageClient>
 </template>
@@ -29,13 +29,19 @@
 import ViewBase from "@/components/ViewBase.vue";
 import ManageClient from "@/components/modal/manage/ManageClient.vue";
 import ClientService from "@/service/clientService.js";
-import clientComp from "@/compositionAPI/clientComp";
-import { ref } from "vue";
+import { ref, onMounted } from "vue";
 import baseComp from "@/compositionAPI/baseComp";
 
-const { object, dialog, handleManage, callEdit } = baseComp();
+const {
+  object,
+  dialog,
+  appStore,
+  handleManage,
+  callEdit,
+  callDeleteBase,
+  closeDialog,
+} = baseComp();
 
-const { appStore } = clientComp();
 const clientService = new ClientService();
 const index = ref(0);
 
@@ -59,6 +65,7 @@ const modalInfo = {
     "Chave",
     "Segredo",
     "Reino",
+    "Cargos",
     "Descrição",
     "Criado em",
     "Atualizado em",
@@ -68,49 +75,34 @@ const modalInfo = {
     "name",
     "key",
     "secret",
-    "realm_id",
+    "realm",
+    "roles",
     "description",
     "created_at",
     "updated_at",
   ],
 };
 
-function closeDialog(e) {
-  dialog.value = false;
-  object.value = null;
-}
-
 function callDelete(e) {
-  try {
-    if (e) {
-      clientService.delete(e);
-      appStore.changeDialog({
-        color: "green",
-        message: `Item ${e} deletado com sucesso !`,
-        show: true,
-      });
-      clients.value = clients.value.filter((i) => i.id !== e);
-    }
-  } catch (error) {
-    appStore.changeDialog({
-      color: "red",
-      message: error,
-      show: true,
-    });
-    console.error(error);
-  }
+  clients.value = callDeleteBase(e, clientService, clients.value);
 }
-
 function fetchClients(page = 1, c = 10) {
-  const realm = "AuthSure";
-  const query = {page, c, realm}
-  clientService.clients(query).then((data) => {
-    clients.value = data.clients;
-    currentPage.value = page;
-    lastPage.value = data.last_page;
-    index.value++;
-  });
+  const realm = localStorage.getItem("choosenRealm");
+  const query = { page, c, realm };
+  clientService
+    .clients(query)
+    .then((data) => {
+      clients.value = data.clients;
+      currentPage.value = page;
+      lastPage.value = data.last_page;
+      index.value++;
+    })
+    .catch((err) => {
+      console.error(err)
+    });
 }
 
-fetchClients();
+onMounted(() => {
+  fetchClients();
+});
 </script>

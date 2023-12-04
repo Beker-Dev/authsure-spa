@@ -1,4 +1,5 @@
 import axios from "axios";
+import { useAppStore } from "@/store/app";
 
 function verifyURL() {
   const hostname = window.location.hostname;
@@ -71,6 +72,15 @@ http.interceptors.response.use(
         return axios(originalRequest);
       }
     }
+    if (errorStatus == 403 || errorStatus == 401) {
+      const appStore = useAppStore();
+      appStore.changeDialog({
+        color: "red",
+        message: `Não autorazido, error : ${errorDetail}`,
+        show: true,
+      });
+    }
+
     return error;
   }
 );
@@ -142,7 +152,10 @@ http.interceptors.response.use(
 // }
 
 async function refresh(payload) {
-  return await http.post("/auth/refresh", payload);
+  return await http.post("/auth/refresh", payload).then((res) => {
+    localStorage.setItem("auth", JSON.stringify(res.data));
+    return res;
+  });
 }
 async function logOut(payload) {
   localStorage.removeItem("auth");

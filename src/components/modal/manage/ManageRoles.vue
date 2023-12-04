@@ -10,7 +10,7 @@
       <v-card-text>
         <v-form ref="form" @submit.prevent="save">
           <v-row>
-            <v-col :cols="'12'">
+            <v-col :cols="'6'">
               <v-text-field
                 :rules="rolesRules.required"
                 :placeholder="'Nome'"
@@ -20,6 +20,31 @@
                 v-model="role.name"
               >
               </v-text-field>
+            </v-col>
+            <v-col cols="6">
+              <v-select
+                item-title="name"
+                item-value="id"
+                return-object
+                :rules="rolesRules.required"
+                v-model="role.realm_id"
+                :label="'Id reino'"
+                :disabled="true"
+                :items="realms"
+                variant="underlined"
+              >
+              </v-select>
+            </v-col>
+            <v-col cols="6">
+              <v-select
+                :rules="rolesRules.required"
+                v-model="role.types"
+                :label="'Acessos'"
+                multiple
+                :items="types"
+                variant="underlined"
+              >
+              </v-select>
             </v-col>
           </v-row>
           <v-card-actions>
@@ -40,13 +65,45 @@
 import ModalBase from "@/components/modal/ModalBase.vue";
 import roleComp from "@/compositionAPI/roleComp";
 
-const { role, sendPayload, appStore } = roleComp();
-import { ref, onMounted } from "vue";
+const { role, sendPayload, appStore, realms, fetchRealms } = roleComp();
+import { ref, onMounted, watch } from "vue";
 const form = ref(null);
-
+const types = ref([
+  "audit_view",
+  "client_view",
+  "client_create",
+  "client_update",
+  "client_delete",
+  "group_view",
+  "group_create",
+  "group_update",
+  "group_delete",
+  "realm_view",
+  "realm_create",
+  "realm_update",
+  "realm_delete",
+  "role_view",
+  "role_create",
+  "role_update",
+  "role_delete",
+  "session_view",
+  "user_view",
+  "user_create",
+  "user_update",
+  "user_delete",
+  "full_access",
+]);
+const choosenType = ref([]);
 const props = defineProps({
   dialog: Boolean,
   object: Object,
+});
+watch(realms, (newValue, oldValue) => {
+  if (newValue.length > 0 && props.object) {
+    role.value.realm_id = newValue.filter(
+      (i) => i.id == role.value.realm_id
+    )[0];
+  }
 });
 
 const rolesRules = {
@@ -54,6 +111,7 @@ const rolesRules = {
 };
 
 onMounted(() => {
+  fetchRealms(1, 40, props.object ? true : false);
   if (props.object) {
     role.value = { ...props.object };
   }

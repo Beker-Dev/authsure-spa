@@ -29,7 +29,9 @@ export default function clientComp() {
     }
   }
   function fetchUsers(page = 1, c = 40) {
-    userService.users(page, c).then((data) => {
+    const realm = localStorage.getItem("choosenRealm");;
+    const query = {page, c, realm}
+    userService.users(query).then((data) => {
       users.value = data.users;
       currentPg.value = page;
       lastPg.value = data.last_page;

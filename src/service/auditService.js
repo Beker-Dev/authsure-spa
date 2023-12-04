@@ -1,16 +1,15 @@
 import Service from "./serviceBase";
 
-class GroupService extends Service {
+class AuditService extends Service {
   constructor() {
     super();
-
-    this.resource = "/groups";
+    this.resource = "/audits";
   }
 
-  async groups(query) {
+  async audits(query) {
     const requestUrl = this.createRequestUrl(query, this.resource);
     return await this.getAPI(requestUrl);
   }
 }
 
-export default GroupService;
+export default AuditService;

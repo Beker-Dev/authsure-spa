@@ -7,6 +7,7 @@
     :keys="['id', 'is_active']"
     :modalEdit="modalEdit"
     :modalDelete="modalDelete"
+    :onlyView="true"
     :modalInfo="modalInfo"
     @openManage="handleManage"
     @edit="callEdit"
@@ -20,7 +21,7 @@
     v-if="dialog"
     :dialog="dialog"
     :object="object"
-    @close="closeDialog"
+    @close="closeDialog($event, fetchSessions)"
   >
   </ManageSession>
 </template>
@@ -33,7 +34,15 @@ import sessionComp from "@/compositionAPI/sessionComp";
 import ManageSession from "@/components/modal/manage/ManageSession.vue";
 import baseComp from "@/compositionAPI/baseComp";
 
-const { object, dialog, attTable, handleManage, callEdit } = baseComp();
+const {
+  object,
+  dialog,
+  attTable,
+  handleManage,
+  callEdit,
+  callDeleteBase,
+  closeDialog,
+} = baseComp();
 
 const { appStore } = sessionComp();
 
@@ -43,7 +52,6 @@ const index = ref(0);
 const currentPage = ref(1);
 const lastPage = ref(1);
 const sessions = ref([]);
-
 
 const modalEdit = {
   title: "Editar Sessão",
@@ -55,39 +63,33 @@ const modalDelete = {
 
 const modalInfo = {
   title: "Informações da Sessão",
-  labels: ["Id", "Ativa", "Usuário", "Token", "Criada em", "Atualizada em"],
-  keys: ["id", "is_active", "user_id", "token", "created_at", "updated_at"],
+  labels: [
+    "Id",
+    "Ativa",
+    "Cliente",
+    "Usuário",
+    "Token",
+    "Criada em",
+    "Atualizada em",
+  ],
+  keys: [
+    "id",
+    "is_active",
+    "client",
+    "user",
+    "token",
+    "created_at",
+    "updated_at",
+  ],
 };
 
-function closeDialog(e) {
-  dialog.value = false;
-  object.value = null;
-}
-
 function callDelete(e) {
-  try {
-    if (e) {
-      sessionService.delete(e);
-      appStore.changeDialog({
-        color: "green",
-        message: `Item ${e} deletado com sucesso !`,
-        show: true,
-      });
-      sessions.value = sessions.value.filter((i) => i.id !== e);
-    }
-  } catch (error) {
-    appStore.changeDialog({
-      color: "red",
-      message: error,
-      show: true,
-    });
-    console.error(error);
-  }
+  sessions.value = callDeleteBase(e, sessionService, sessions.value);
 }
 
 function fetchSessions(page = 1, c = 10) {
-  const realm = "AuthSure";
-  const query = {page, c, realm}
+  const realm = localStorage.getItem("choosenRealm");
+  const query = { page, c, realm };
   sessionService.sessions(query).then((data) => {
     sessions.value = data.sessions;
     currentPage.value = page;

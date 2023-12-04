@@ -9,7 +9,7 @@
       </v-col>
     </v-row>
     <v-row>
-      <v-col cols="12" md="5" xl="5" class="d-flex flex-row">
+      <v-col cols="12" md="5" xl="5" class="d-flex flex-row" v-if="!onlyView">
         <v-btn
           size="x-large"
           variant="text"
@@ -29,8 +29,7 @@
         >
         </v-text-field>
       </v-col>
-
-      <v-col cols="12">
+      <v-col cols="12" :key="attTable">
         <v-table theme="dark">
           <thead>
             <tr>
@@ -53,11 +52,28 @@
               </td>
               <td class="text-center">
                 <v-btn
+                  v-if="isRealmPage"
+                  :color="
+                    definedChoosenRealm == object['name'] ? 'green' : 'white'
+                  "
+                  @click="setSelectedRealm(object['name'])"
+                  size="x-small"
+                  icon
+                  ><v-icon
+                    >{{
+                      definedChoosenRealm == object["name"]
+                        ? "mdi-check"
+                        : "mdi-radiobox-blank"
+                    }}
+                  </v-icon></v-btn
+                >
+                <v-btn
                   color="primary"
                   size="x-small"
                   icon
                   text
-                  class="mr-1"
+                  class="ml-1"
+                  v-if="!onlyView"
                   @click="handleModal('edit', object)"
                   ><v-icon>mdi-pencil</v-icon></v-btn
                 >
@@ -65,7 +81,8 @@
                   color="error"
                   size="x-small"
                   icon
-                  class="mx-1"
+                  class="ml-1"
+                  v-if="!onlyView"
                   @click="handleModal('delete', object)"
                   ><v-icon>mdi-delete</v-icon></v-btn
                 >
@@ -114,13 +131,17 @@ import ModalEdit from "@/components/modal/ModalEdit.vue";
 import ModalDelete from "@/components/modal/ModalDelete.vue";
 import ModalInfo from "@/components/modal/ModalInfo.vue";
 import Pagination from "@/components/Pagination.vue";
-
+import { useAppStore } from "@/store/app";
 export default {
   components: {
     ModalInfo,
     ModalDelete,
     ModalEdit,
     Pagination,
+  },
+  created() {
+    this.appStore = useAppStore();
+    this.definedChoosenRealm = this.appStore.getChoosenRealm;
   },
 
   computed: {
@@ -169,15 +190,15 @@ export default {
     },
     ModalEdit: {
       type: Object,
-      required: true,
+      required: false,
     },
     modalDelete: {
       type: Object,
-      required: true,
+      required: false,
     },
     modalInfo: {
       type: Object,
-      required: true,
+      required: false,
     },
     page: {
       type: Number,
@@ -186,6 +207,14 @@ export default {
     lastPage: {
       type: Number,
       default: 1,
+    },
+    isRealmPage: {
+      type: Boolean,
+      default: false,
+    },
+    onlyView: {
+      type: Boolean,
+      default: false,
     },
   },
   data() {
@@ -196,6 +225,10 @@ export default {
       selectedObject: {},
       idDelete: null,
       filterText: "",
+      choosenRealm: null,
+      appStore: null,
+      definedChoosenRealm: null,
+      attTable: 1,
       deleteBase: {
         message: "Deseja realmente deletar esse registro ?",
         title: "Deletar Registro",
@@ -204,7 +237,6 @@ export default {
   },
   methods: {
     handleModal(type, object) {
-      console.log('aa')
       this.selectedObject = object;
 
       switch (type) {
@@ -221,9 +253,14 @@ export default {
       }
     },
 
+    setSelectedRealm(realm) {
+      this.appStore.setChoosenRealm(realm);
+      this.definedChoosenRealm = realm;
+      this.attTable += 1;
+    },
+
     responseFromModal(event) {
       if (event) {
-        console.log(event);
         this.$emit("delete", this.idDelete);
       }
       this.idDelete = null;

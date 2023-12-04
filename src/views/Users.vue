@@ -20,7 +20,7 @@
     v-if="dialog"
     :dialog="dialog"
     :object="object"
-    @close="closeDialog"
+    @close="callClose($event)"
   ></ManageUser>
 </template>
 
@@ -31,7 +31,15 @@ import UserService from "@/service/userService.js";
 import { ref, watch } from "vue";
 import baseComp from "@/compositionAPI/baseComp";
 
-const { object, dialog, attTable, handleManage, callEdit } = baseComp();
+const {
+  object,
+  dialog,
+  attTable,
+  handleManage,
+  callEdit,
+  callDeleteBase,
+  closeDialog,
+} = baseComp();
 
 const userService = new UserService();
 const index = ref(0);
@@ -39,26 +47,13 @@ const currentPage = ref(1);
 const lastPage = ref(1);
 const users = ref([]);
 
-
-
-function closeDialog(e) {
-  dialog.value = false;
-  object.value = null;
-  fetchUsers();
-}
-
 function callDelete(e) {
-  console.log(e);
-  try {
-    if (e) {
-      userService.delete(e);
-      users.value = users.value.filter((i) => i.id !== e);
-    }
-  } catch (error) {
-    console.error(error);
-  }
+  users.value = callDeleteBase(e, userService, users.value);
 }
 
+function callClose(e) {
+  closeDialog(e, fetchUsers);
+}
 const modalEdit = {
   title: "Editar Usuário",
 };
@@ -74,15 +69,26 @@ const modalInfo = {
     "Nome de usuário",
     "Email",
     "Reino",
+    "Grupos",
+    "Cargos",
     "Criado em",
     "Atualizado em",
   ],
-  keys: ["id", "username", "email", "realm_id", "created_at", "updated_at"],
+  keys: [
+    "id",
+    "username",
+    "email",
+    "realm",
+    "groups",
+    "roles",
+    "created_at",
+    "updated_at",
+  ],
 };
 
 function fetchUsers(page = 1, c = 10) {
-  const realm = "AuthSure";
-  const query = {page, c, realm}
+  const realm = localStorage.getItem("choosenRealm");
+  const query = { page, c, realm };
   userService.users(query).then((data) => {
     users.value = data.users;
     currentPage.value = page;
